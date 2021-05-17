@@ -1,0 +1,25 @@
+devices: 
+  - 
+    applications: 
+      - 
+        name: "google-chrome-pantas-selamat"
+        should_update: true
+      - 
+        name: "orange-tv-be"
+        should_update: true
+    enabled: true
+    ip: "192.168.0.2"
+    port: 5555
+    name: shield
+    polling_time: 3600
+  - 
+    applications: 
+      - 
+        name: "google-chrome-pantas-selamat"
+        should_update: true
+    enabled: true
+    ip: "192.168.0.8"
+    port: 5555
+    name: "Galaxy S10"
+    polling_time: 3600
+
