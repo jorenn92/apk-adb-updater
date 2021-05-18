@@ -1,9 +1,7 @@
-import application
+from application import application
 import yaml
-from adb_shell.adb_device import AdbDeviceTcp, AdbDeviceUsb
-from adb_shell.auth.sign_pythonrsa import PythonRSASigner
-
-application = application.application
+import subprocess
+import time
 
 class device:
     name = ''
@@ -19,8 +17,6 @@ class device:
         self.ip = vars['ip']
         if(vars['enabled']):
             self.enabled = vars['enabled']
-        if(vars['polling_time']):
-            self.polling_time = vars['polling_time']
         if(vars['port']):
             self.port = vars['port']
         self.applications = []
@@ -44,21 +40,44 @@ class device:
         return all_devices
     
     def connect_adb(self):
-        # Load the public and private keys
-        # Load the public and private keys
-        adbkey = 'adb/keys'
-        with open(adbkey) as f:
-            priv = f.read()
-        with open(adbkey + '.pub') as f:
-            pub = f.read()
+        adb = subprocess.run(["adb/linux/adb", "devices"], stdout=subprocess.PIPE, text=True)
+        # Do first pair if not found
+        if adb.stdout.find(self.ip) == -1:
+            print('device ' + self.ip + ' not found. Starting first pair')
+            state = self.adb_pair();
+        else:
+            state = 1
 
-        signer = PythonRSASigner(pub, priv)
-        device = AdbDeviceTcp(self.ip, 5555, default_transport_timeout_s=9.)
-        device.connect(rsa_keys=[signer], auth_timeout_s=0.1)
-        response1 = device.shell('echo TEST1')
+        if state == 1:
+            # Connect to device
+            print('Connecting to ' + self.ip)
+            adb = subprocess.run(["adb/linux/adb", "connect", str(self.ip) + ':' + str(self.port)], stdout=subprocess.PIPE)
+            if (str(adb.stdout).find('connected to') != -1):
+                print('Successfully connected')
+                return 1
+            else:
+                print('Connection failed')
+                return 0
+        else:
+            return 0
 
+        
     def adb_pair(self):
-        # connect with a android 11+ device
-        #adb pair <ip>:<port>
-        # code ingeven
-        response1 = device.shell('adb pair ' + self.ip + ':' + self.port)
+        inp = input('is your device\'s android version >= 11 ? (y/n)')
+        # For android 11+ do new pairing method
+        if (inp == 'y' or inp == 'yes'):
+            inp = input('Please enable remote debugging and pair device with code. Please enter the pairing port(underneath the code, after the ip:) and generated code, split by a \',\' (i.e. 5542,698796): ')
+            pos = inp.find(',')
+            adb = subprocess.run(["adb/linux/adb", "pair", self.ip + ':' + inp[:pos]], stdout=subprocess.PIPE, text=True, input=inp[pos + 1:])
+            if adb.stdout.find('Successfully paired') != -1:
+                print('Pairing..')
+                time.sleep(5)
+                print('Successfully paired to ' + self.name)
+                return 1
+            else:
+                print('Device not found.. ')
+                return 0
+        else:
+            # For android 10 and lower.. Do older method which requires cable
+            print('For android versions < 11 a first pair with cable is required. This is sadly not implemented yet.')
+            return 0

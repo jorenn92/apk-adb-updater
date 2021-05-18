@@ -2,24 +2,23 @@ devices:
   - 
     applications: 
       - 
-        name: "google-chrome-pantas-selamat"
-        should_update: true
-      - 
-        name: "orange-tv-be"
+        package_name: "com.orange.be.orangetv"
         should_update: true
     enabled: true
-    ip: "192.168.0.2"
-    port: 5555
-    name: shield
-    polling_time: 3600
+    ip: "192.168.0.12"
+    port: 43215
+    name: Galaxy S10
   - 
     applications: 
       - 
-        name: "google-chrome-pantas-selamat"
+        package_name: "com.android.chrome"
+        should_update: true
+      - 
+        package_name: "com.orange.be.orangetv"
         should_update: true
     enabled: true
     ip: "192.168.0.8"
-    port: 5555
-    name: "Galaxy S10"
-    polling_time: 3600
+    port: 43215
+    name: shield
+timeout: 3600
 
