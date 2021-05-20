@@ -2,7 +2,8 @@ FROM ubuntu:20.04
 LABEL Maintainer="Jorenn92"
 LABEL Description="Contains the aptoid-adb-updater image"
 
-ENV APP_HOME=/opt/aptoide-adb-updater/
+ENV     APP_HOME=/opt/aptoide-adb-updater/
+ENV     LOG_DIR=/opt/aptoide-adb-updater/logs
 
 RUN  mkdir -p  ${APP_HOME}/config
 
