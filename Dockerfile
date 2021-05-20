@@ -20,7 +20,7 @@ RUN set -x && \
     mkdir -p adb/linux && \
     mkdir cache && \
     cd adb/linux && \
-    wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
+    wget --no-check-certificate https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
     unzip -o platform-tools-latest-linux.zip && \
     mv platform-tools/* . && \
     rm -rf platform-tools platform-tools-latest-linux.zip && \
