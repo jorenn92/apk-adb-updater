@@ -9,6 +9,8 @@ It is possible to also use the updater on devices with Android versions < 11 thr
 
 **Currently an adb pair is needed after each restart of the adb daemon which isn't ideal.**
 
+Running: python3 aptoide_updater.py
+
 ##  Configuration: 
 
 Configure all devices and applications in **config.yaml**
