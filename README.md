@@ -42,3 +42,7 @@ Configure all devices and applications in **config.yml**
 ```sh
 python3 aptoide_updater.py
 ```
+or
+```sh
+./startUpdater.sh
+```
