@@ -26,7 +26,9 @@ RUN set -x && \
     mv platform-tools/* . && \
     rm -rf platform-tools platform-tools-latest-linux.zip && \
     apt-get -y remove pip wget unzip && \
-    chown -R user:user ${APP_HOME}
+    chown -R user:user ${APP_HOME} && \
+    chown user:user /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 USER user
 ENTRYPOINT ./entrypoint.sh
