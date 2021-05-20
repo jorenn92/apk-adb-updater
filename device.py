@@ -46,12 +46,14 @@ class device:
         adb = subprocess.run(["adb/linux/adb", "devices"], stdout=subprocess.PIPE, text=True)
         # Do first pair if not found
         if adb.stdout.find(self.ip) == -1:
-            if os.getenv('APP_HOME', None) != None:
-                print('device ' + self.ip + ' not found. Starting first pair')
+            print('device ' + self.ip + ' not found')
+            if os.getenv('APP_HOME', None) == None:
+                print('Starting first pair')
                 state = self.adb_pair();
             else:
                 print('Docker mode detected. At the moment it\'s not possible to automatically pair without user input. You need to exec in the container and adb pair your device manually before the updater wil do anything. Please check the documentation')
-                print('Skipping the update for ' + device.name + '. Please pair manually')
+                print('Skipping the update for ' + self.name + '. Please pair manually')
+                state = 0
         else:
             state = 1
 
@@ -86,5 +88,5 @@ class device:
                 return 0
         else:
             # For android 10 and lower.. Do older method which requires cable
-            print('For android versions < 11 a first pair with cable is required. This is sadly not implemented yet.')
+            print('For android versions < 11 a first pair with cable is required. Please do this manually')
             return 0
