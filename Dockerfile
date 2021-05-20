@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 LABEL Maintainer="Jorenn92"
 LABEL Description="Contains the aptoid-adb-updater image"
 
-ENV APP_HOME=/opt/aptoide-adb-updater
+ENV APP_HOME=/opt/aptoide-adb-updater/
 
 RUN groupadd user && \
     useradd -g user user && \
@@ -26,4 +26,4 @@ RUN set -x && \
     rm -rf platform_tools platform-tools-latest-linux.zip
 
 USER user
-ENTRYPOINT ["${APP_HOME}/startUpdater.sh"]
+ENTRYPOINT ["${APP_HOME}startUpdater.sh"]
