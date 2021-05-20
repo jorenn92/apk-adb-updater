@@ -27,4 +27,4 @@ RUN set -x && \
     apt-get -y remove pip wget unzip
 
 USER user
-ENTRYPOINT ["${APP_HOME}startUpdater.sh"]
+ENTRYPOINT [ "sh", "-c", "${APP_HOME}startUpdater.sh"]
