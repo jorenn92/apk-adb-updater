@@ -22,8 +22,8 @@ RUN set -x && \
     cd adb/linux && \
     wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
     unzip -o platform-tools-latest-linux.zip && \
-    mv platform_tools/* . && \
-    rm -rf platform_tools platform-tools-latest-linux.zip && \
+    mv platform-tools/* . && \
+    rm -rf platform-tools platform-tools-latest-linux.zip && \
     apt-get -y remove pip wget unzip
 
 USER user
