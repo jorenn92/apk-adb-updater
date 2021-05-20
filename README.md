@@ -11,7 +11,7 @@ It is possible to also use the updater on devices with Android versions < 11 thr
 
 ##  Configuration
 
-Configure all devices and applications in **config.yml**
+Configure all devices and applications in **config/config.yml**
 
 ```sh
   devices: 
