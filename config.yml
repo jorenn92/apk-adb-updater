@@ -21,5 +21,5 @@ devices:
     ip: "192.168.0.8"
     port: 43215
     name: shield
-timeout: 3600
+timeout: 7200 # Check for updates every 2 hours
 

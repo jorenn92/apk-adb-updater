@@ -1,6 +1,9 @@
+import os
 import sys
+from time import sleep
 from device import device
 import yaml
+import time
 
 class updater:
     def perform_update(devices):
@@ -42,7 +45,24 @@ class updater:
 
 def main(args=None):
     devices = device.load_devices()
-    updater.perform_update(devices)
+    timeout = devices[0].timeout
+    first_run = True
+    while True :
+        if(first_run != True):
+            print('Updating again in ' + str(timeout) + ' seconds')
+            time.sleep(timeout)
+        else:
+            first_run = False
+
+        updater.perform_update(devices)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('Interrupted')
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
+    #sys.exit(main())

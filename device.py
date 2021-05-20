@@ -8,7 +8,7 @@ class device:
     ip = ''
     port = 5555
     enabled = True
-    polling_time = 3600
+    timeout = 3600
     applications = []
 
 
@@ -29,14 +29,16 @@ class device:
         # Get configs
         with open('config.yml', 'r') as file:
             config = yaml.safe_load(file) 
-
+        
         # set from config
         devices = config['devices']
 
         # get all devices
         all_devices = [];
         for dev in devices:
-            all_devices.append(device(dev))
+            dev = device(dev)
+            dev.timeout = config['timeout']
+            all_devices.append(dev)
         return all_devices
     
     def connect_adb(self):
