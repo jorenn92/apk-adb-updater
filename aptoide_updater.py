@@ -45,6 +45,12 @@ class updater:
 
 
 def main(args=None):
+    # set working dir
+    path = os.getenv('APP_HOME') if os.getenv('APP_HOME', '0') != '0' else None
+    if path != None:
+        os.chdir(path)
+
+    # Go 
     devices = device.load_devices()
     timeout = devices[0].timeout
     first_run = True

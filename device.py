@@ -28,8 +28,7 @@ class device:
 
     def load_devices():
         # Get configs
-        conf_location = os.getenv('APP_HOME') + 'config/config.yml' if os.getenv('APP_HOME', 'not set') != 'not set' else 'config/config.yml'
-        with open(conf_location, 'r') as file:
+        with open('config/config.yml', 'r') as file:
             config = yaml.safe_load(file) 
         
         # set from config
