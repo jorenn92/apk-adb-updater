@@ -14,7 +14,7 @@ COPY    --chown=user:user   startUpdater.sh     ${APP_HOME}
 
 RUN set -x && \
     apt-get -y update  && \
-    apt-get -y install pip python3 wget  && \
+    apt-get -y install pip python3 wget unzip  && \
     cd ${APP_HOME} && \
     pip install pyyaml && \
     mkdir -p adb/linux && \
@@ -24,7 +24,7 @@ RUN set -x && \
     unzip -o platform-tools-latest-linux.zip && \
     mv platform_tools/* . && \
     rm -rf platform_tools platform-tools-latest-linux.zip && \
-    apt-get -y remove pip wget
+    apt-get -y remove pip wget unzip
 
 USER user
 ENTRYPOINT ["${APP_HOME}startUpdater.sh"]
