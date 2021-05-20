@@ -1,4 +1,5 @@
 import os
+import glob
 import sys
 from time import sleep
 from device import device
@@ -49,12 +50,23 @@ def main(args=None):
     first_run = True
     while True :
         if(first_run != True):
-            print('Updating again in ' + str(timeout) + ' seconds')
+            print('Done, updating again in ' + str(timeout) + ' seconds')
             time.sleep(timeout)
         else:
+            if not(os.path.exists('cache') and os.path.isdir('cache')):
+                os.mkdir('cache', 0o755)
             first_run = False
-
         updater.perform_update(devices)
+        clear_cache(), 
+
+def clear_cache():
+    files = glob.glob('cache/*')
+    for f in files:
+        try:
+            os.remove(f)
+        except OSError as e:
+            print("Error: %s : %s" % (f, e.strerror))
+    print('Cache cleared')
 
 if __name__ == "__main__":
     try:
@@ -65,4 +77,3 @@ if __name__ == "__main__":
             sys.exit(0)
         except SystemExit:
             os._exit(0)
-    #sys.exit(main())
