@@ -36,5 +36,5 @@ Configure all devices and applications in **config.yaml**
       ip: "192.168.0.8"
       port: 5555
       name: "Galaxy S10"
- timeout: 3600
+ timeout: 7200 # triggers a check every 2 hours
 ```
