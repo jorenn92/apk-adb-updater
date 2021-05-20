@@ -1,6 +1,6 @@
 # aptoide-adb-updater
 
-Installs and keeps applications up to date on android 11+ devices on your local network through a remote adb connection. 
+Installs and keeps applications up to date on android 11+ devices in your local network through a remote adb connection. 
 Periodically checks Aptoide for an updated .apk and installs it on the device when an update is found.
 
 Specifically build for updating a few applications on an android TV box which aren't available on the official play store, such as Google Chrome.
