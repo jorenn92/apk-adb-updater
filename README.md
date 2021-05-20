@@ -1,6 +1,6 @@
 # aptoide-adb-updater
 
-Installs and keeps applications up to date on android 11+ devices on your local network through a remote adb connection. 
+Installs and keeps applications up to date on android 11+ devices in your local network through a remote adb connection. 
 Periodically checks Aptoide for an updated .apk and installs it on the device when an update is found.
 
 Specifically build for updating a few applications on an android TV box which aren't available on the official play store, such as Google Chrome.
@@ -9,9 +9,9 @@ It is possible to also use the updater on devices with Android versions < 11 thr
 
 **Currently an adb pair is needed after each restart of the adb daemon which isn't ideal.**
 
-##  Configuration: 
+##  Configuration
 
-Configure all devices and applications in **config.yaml**
+Configure all devices and applications in **config.yml**
 
 ```sh
   devices: 
@@ -36,5 +36,9 @@ Configure all devices and applications in **config.yaml**
       ip: "192.168.0.8"
       port: 5555
       name: "Galaxy S10"
- timeout: 3600
+ timeout: 7200 # triggers a check every 2 hours
+```
+## Running
+```sh
+python3 aptoide_updater.py
 ```
