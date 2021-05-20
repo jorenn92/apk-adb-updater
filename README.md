@@ -10,7 +10,7 @@ Currently an adb pair is needed after each restart of the adb daemon which isn't
 ##  Configuration: 
 
 Configure all devices and applications in **config.yaml**
-example:
+
 ```sh
   devices: 
     - 
