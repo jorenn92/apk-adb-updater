@@ -6,12 +6,11 @@ ENV APP_HOME=/opt/aptoide-adb-updater/
 
 RUN groupadd user && \
     useradd -g user user && \
-    mkdir -p ${APP_HOME} && \
-    chown -R user:user ${APP_HOME}
+    mkdir -p  ${APP_HOME}/config
 
 COPY    --chown=user:user   *.py                ${APP_HOME}
-COPY    --chown=user:user   config.yml          ${APP_HOME}
-COPY    --chown=user:user   entrypoint.sh     /
+COPY    --chown=user:user   config/*            ${APP_HOME}/config/
+COPY    --chown=user:user   entrypoint.sh       /
 
 RUN set -x && \
     apt-get -y update  && \
