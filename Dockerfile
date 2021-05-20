@@ -15,7 +15,7 @@ COPY    --chown=user:user   entrypoint.sh     /
 
 RUN set -x && \
     apt-get -y update  && \
-    apt-get -y install pip3 python3 wget unzip  && \
+    apt-get -y install pip python3 wget unzip  && \
     cd ${APP_HOME} && \
     pip install pyyaml && \
     mkdir -p adb/linux && \
@@ -25,7 +25,7 @@ RUN set -x && \
     unzip -o platform-tools-latest-linux.zip && \
     mv platform-tools/* . && \
     rm -rf platform-tools platform-tools-latest-linux.zip && \
-    apt-get -y remove pip3 wget unzip && \
+    apt-get -y remove pip wget unzip && \
     chown -R user:user ${APP_HOME}
 
 USER user
