@@ -1,11 +1,12 @@
-# aptoide-adb-updater
+# Apk-adb-updater
 
-Installs and keeps applications up to date on android 11+ devices in your local network through a remote adb connection. 
-Periodically checks Aptoide for an updated .apk and installs it on the device when an update is found.
+Installs and keeps applications up to date on android devices in your local network through a remote adb connection. 
+Periodically checks Aptoide or Apkmirror for an updated .apk and installs it on the device when an update is found.
 
 Specifically build for updating a few applications on an android TV box which aren't available on the official play store, such as Google Chrome.
 
-It is possible to also use the updater on devices with Android versions < 11 through manually pairing. You'll need to connect the device with a cable once and follow [these instructions](https://developer.android.com/studio/command-line/adb#wireless). But once it is paired and it shows up in 'adb devices' the updater should find the device and install/update the applications. 
+It is recommended to manually pair your device with remote adb. When your device is available in 'adb devices' the updater will pick it up.
+There's also a build in way to pair with android 11+. (user action still required)
 
 **Currently an adb pair is needed after each restart of the adb daemon which isn't ideal.**
 
@@ -45,5 +46,5 @@ Configure all devices and applications in **config/config.yml**
 ```
 ## Running
 ```sh
-python3 aptoide_updater.py
+python3 apk_updater.py
 ```
