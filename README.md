@@ -14,29 +14,34 @@ It is possible to also use the updater on devices with Android versions < 11 thr
 Configure all devices and applications in **config/config.yml**
 
 ```sh
+  # EXAMPLE CONFIGURATION.. Change this
   devices: 
     - 
       applications: 
-        - 
-          package_name: "com.android.chrome"
-          should_update: true
         - 
           package_name: "com.orange.be.orangetv"
           should_update: true
       enabled: true
       ip: "192.168.0.12"
       port: 43215
-      name: Nvidia Shield
+      name: Galaxy S10
     - 
       applications: 
         - 
           package_name: "com.android.chrome"
           should_update: true
+        - 
+          package_name: "com.google.android.apps.tv.launcherx"
+          should_update: true
+          provider: apkmirror
       enabled: true
-      ip: "192.168.0.8"
+      ip: "192.168.0.6"
       port: 5555
-      name: "Galaxy S10"
- timeout: 7200 # triggers a check every 2 hours
+      name: shield
+      arch: armeabi-v7a
+      api_level: 28
+  timeout: 7200 # Check for updates every 2 hours
+  provider: apkmirror # apkmirror | aptoide
 ```
 ## Running
 ```sh

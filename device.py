@@ -11,15 +11,23 @@ class device:
     enabled = True
     timeout = 3600
     applications = []
-
+    arch = 'arm64-v8a'
+    dpi = 'nodpi'
+    api_level = 0
 
     def __init__(self, vars):
         self.name = vars['name']
         self.ip = vars['ip']
-        if(vars['enabled']):
+        if('enabled' in vars):
             self.enabled = vars['enabled']
-        if(vars['port']):
+        if('port' in vars):
             self.port = vars['port']
+        if('arch' in vars):
+            self.arch = vars['arch']
+        if('dpi' in vars):
+            self.dpi = vars['dpi']
+        if('api_level' in vars):
+            self.api_level = vars['api_level']
         self.applications = []
         
         for app in vars['applications'] :
@@ -88,5 +96,5 @@ class device:
                 return 0
         else:
             # For android 10 and lower.. Do older method which requires cable
-            print('For android versions < 11 a first pair with cable is required. Please do this manually')
+            print('For android versions < 11 a manual first pair is required.')
             return 0

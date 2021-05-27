@@ -15,11 +15,14 @@ devices:
         package_name: "com.android.chrome"
         should_update: true
       - 
-        package_name: "com.orange.be.orangetv"
+        package_name: "com.google.android.apps.tv.launcherx"
         should_update: true
+        provider: apkmirror
     enabled: true
-    ip: "192.168.0.8"
-    port: 43215
+    ip: "192.168.0.6"
+    port: 5555
     name: shield
+    arch: armeabi-v7a
+    api_level: 28
 timeout: 7200 # Check for updates every 2 hours
-
+provider: apkmirror # apkmirror | aptoide

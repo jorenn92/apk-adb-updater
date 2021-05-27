@@ -1,9 +1,9 @@
 FROM ubuntu:20.04
 LABEL Maintainer="Jorenn92"
-LABEL Description="Contains the aptoid-adb-updater image"
+LABEL Description="Contains the apk-adb-updater image"
 
-ENV     APP_HOME=/opt/aptoide-adb-updater/
-ENV     LOG_DIR=/opt/aptoide-adb-updater/logs
+ENV     APP_HOME=/opt/apk-adb-updater/
+ENV     LOG_DIR=/opt/apk-adb-updater/logs
 
 RUN  mkdir -p  ${APP_HOME}/config
 
@@ -15,7 +15,7 @@ RUN set -x && \
     apt-get -y update  && \
     apt-get -y install pip python3 wget unzip  && \
     cd ${APP_HOME} && \
-    pip install pyyaml && \
+    pip install pyyaml requests && \
     mkdir -p adb/linux && \
     mkdir cache && \
     cd adb/linux && \

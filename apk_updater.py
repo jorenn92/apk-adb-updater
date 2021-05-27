@@ -30,8 +30,9 @@ class updater:
                             # install newer version if other version detected
                             if latest_version != 0 and latest_version != current_ver:
                                 print('Installing version ' + latest_version + '...')
-                                application.download_apk()
-                                state = application.install_apk()
+                                state = application.download_apk(device.arch, device.dpi, device.api_level)
+                                if state != 0:
+                                    state = application.install_apk()
                                 if state != 0:
                                     print('succesfully installed ' + application.package_name + ' version ' + latest_version)
                                 else :
