@@ -55,7 +55,7 @@ class Apkmirror(ProviderInterface):
         for apk in api_resp['data'][0]['apks'] :
             print(int(api_level))
             if arch in apk['arches'] or len(apk['arches']) < 1 :
-                if 'minapi' in apk and int(api_level) >= int(apk['minapi']):
+                if 'minapi' in apk and (int(api_level) >= int(apk['minapi']) or int(api_level) == 0):
                     if dpi in apk['dpis'] or dpi == 'nodpi':
                         return self.api_url + apk['link'] + 'download/'
         print('no suitable apk found for given architecture, dpi & min version')
