@@ -3,6 +3,8 @@ import yaml
 import subprocess
 import time
 import os
+from adb_shell.adb_device import AdbDeviceTcp, AdbDeviceUsb
+from adb_shell.auth.sign_pythonrsa import PythonRSASigner
 
 class device:
     name = ''
@@ -98,3 +100,18 @@ class device:
             # For android 10 and lower.. Do older method which requires cable
             print('For android versions < 11 a manual first pair is required.')
             return 0
+    
+    def connect_adb_new(self):
+        # Load the public and private keys
+        adbkey = 'config/keys/adbkey'
+        with open(adbkey) as f:
+            priv = f.read()
+        with open(adbkey + '.pub') as f:
+            pub = f.read()
+        signer = PythonRSASigner(pub, priv)
+
+        # Connect
+        device = AdbDeviceTcp(self.ip, self.port, default_transport_timeout_s=9.)
+        device.connect(rsa_keys=[signer], auth_timeout_s=0.1)
+        return device
+

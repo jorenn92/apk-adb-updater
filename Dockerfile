@@ -15,7 +15,7 @@ RUN set -x && \
     apt-get -y update  && \
     apt-get -y install pip python3 wget unzip  && \
     cd ${APP_HOME} && \
-    pip install pyyaml requests && \
+    pip install pyyaml requests adb-shell && \
     mkdir -p adb/linux && \
     mkdir cache && \
     cd adb/linux && \
