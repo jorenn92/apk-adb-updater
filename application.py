@@ -1,7 +1,4 @@
 
-import urllib.request
-import json
-import shutil
 import yaml
 import subprocess
 from providers.apkmirror import Apkmirror
@@ -47,7 +44,7 @@ class application:
 
 
     def current_version(self, device):
-        adb = subprocess.run(["adb/linux/adb", "shell", "dumpsys", "package", self.package_name], stdout=subprocess.PIPE, text=True)
+        adb = subprocess.run(["adb/linux/adb", "-s", device.ip + ':' + device.port, "shell", "dumpsys", "package", self.package_name], stdout=subprocess.PIPE, text=True)
         pos = adb.stdout.find('versionName')
         if pos != -1:
             str = adb.stdout[pos:]
@@ -60,10 +57,9 @@ class application:
     def download_apk(self, arch='arm64-v8a', dpi='nodpi', api_level=0):
         return self.provider.download_apk(self.package_name, self.latest_version, arch, dpi, api_level)
 
-    def install_apk(self):
+    def install_apk(self, device):
         apk_name = self.package_name +'_' + self.latest_version + '.apk'
-        adb = subprocess.run(["adb/linux/adb", "install", "-r", "cache/" + apk_name], stdout=subprocess.PIPE, text=True)
-        print(adb.stdout)
+        adb = subprocess.run(["adb/linux/adb", "-s", device.ip + ':' + device.port, "install", "-r", "cache/" + apk_name], stdout=subprocess.PIPE, text=True)
         if adb.stdout.find('Success') != -1:
             return 1
         else:

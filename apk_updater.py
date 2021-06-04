@@ -3,8 +3,10 @@ import glob
 import sys
 from time import sleep
 from device import device
-import yaml
 import time
+from requests import get
+import subprocess
+
 
 class updater:
     def perform_update(devices):
@@ -32,7 +34,7 @@ class updater:
                                 print('Installing version ' + latest_version + '...')
                                 state = application.download_apk(device.arch, device.dpi, device.api_level)
                                 if state != 0:
-                                    state = application.install_apk()
+                                    state = application.install_apk(device)
                                 if state != 0:
                                     print('succesfully installed ' + application.package_name + ' version ' + latest_version)
                                 else :
@@ -52,6 +54,7 @@ def main(args=None):
         os.chdir(path)
 
     # Go 
+    platform_tools() # Update platform-tools
     devices = device.load_devices()
     timeout = devices[0].timeout
     first_run = True
@@ -74,6 +77,36 @@ def clear_cache():
         except OSError as e:
             print("Error: %s : %s" % (f, e.strerror))
     print('Cache cleared')
+
+def platform_tools():
+    print('Getting the latest Android Platform Tools..')
+    # open in binary mode
+    try:
+        with open('cache/platform_tools.zip', "wb") as file:
+            resp = get('https://dl.google.com/android/repository/platform-tools-latest-linux.zip')
+            # write to file
+            file.write(resp.content)
+    except Exception: 
+        print('Platform Tools update failed')
+        return 0
+    
+    # remove previous install
+    subprocess.call("rm -rf adb/linux/*", shell=True)
+
+    # install new
+    try:
+        import zipfile
+        with zipfile.ZipFile('cache/platform_tools.zip', 'r') as zip_ref:
+            zip_ref.extractall('cache/platform_tools')
+
+        subprocess.call("mv cache/platform_tools/platform-tools/* adb/linux/", shell=True)
+
+
+        print('Update complete')
+        return 1
+    except Exception:
+        print('Platform Tools update failed')
+
 
 if __name__ == "__main__":
     try:

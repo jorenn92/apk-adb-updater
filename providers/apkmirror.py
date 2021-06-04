@@ -1,8 +1,6 @@
 import urllib.request
-import time
 from requests import get
 import json
-import shutil
 from providers.providerInterface import ProviderInterface
 
 class Apkmirror(ProviderInterface):
@@ -27,7 +25,11 @@ class Apkmirror(ProviderInterface):
     def latest_app_version(self, package_name):
         api_resp = self.request(package_name)
         if api_resp != 0 :
-            return api_resp['data'][0]['release']['version']
+            if api_resp['data'][0]['exists'] != False:
+                return api_resp['data'][0]['release']['version']
+            else:
+                print(package_name + ' doesn\'t exist on Apkmirror')
+                return 0
         else : 
             return 0 
 
@@ -53,7 +55,6 @@ class Apkmirror(ProviderInterface):
 
     def get_link(self, api_resp, arch='arm64-v8a', dpi='nodpi', api_level=0):
         for apk in api_resp['data'][0]['apks'] :
-            print(int(api_level))
             if arch in apk['arches'] or len(apk['arches']) < 1 :
                 if 'minapi' in apk and (int(api_level) >= int(apk['minapi']) or int(api_level) == 0):
                     if dpi in apk['dpis'] or dpi == 'nodpi':
