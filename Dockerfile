@@ -30,7 +30,8 @@ RUN set -x && \
     mv platform-tools/* . && \
     rm -rf platform-tools platform-tools-latest-linux.zip && \
     apt-get -y remove pip wget unzip && \
+    chmod 755 ${APP_HOME} && \
+    chmod +x adb/linux/adb && \
     chmod +x /entrypoint.sh
-
 
 ENTRYPOINT ./entrypoint.sh

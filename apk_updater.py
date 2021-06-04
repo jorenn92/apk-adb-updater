@@ -100,7 +100,7 @@ def platform_tools():
             zip_ref.extractall('cache/platform_tools')
 
         subprocess.call("mv cache/platform_tools/platform-tools/* adb/linux/", shell=True)
-
+        subprocess.call("chmod +x adb/linux/adb", shell=True)
 
         print('Update complete')
         return 1
