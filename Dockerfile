@@ -6,13 +6,13 @@ ENV     APP_HOME=/opt/apk-adb-updater/
 ENV     LOG_DIR=/opt/apk-adb-updater/logs
 
 RUN mkdir -p  ${APP_HOME}/config && \
-    mkdir ~/.android
+    mkdir /root/.android
 
 COPY    *.py                ${APP_HOME}
 COPY    config/*            ${APP_HOME}/config/
 COPY    entrypoint.sh       /
 
-VOLUME ~/.android/
+VOLUME /root/.android/
 
 RUN set -x && \
     apt-get -y update  && \
