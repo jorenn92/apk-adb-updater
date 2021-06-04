@@ -10,7 +10,7 @@ RUN mkdir -p  ${APP_HOME}/config && \
     mkdir /root/.android
 
 COPY    *.py                ${APP_HOME}
-COPY    providers/*         ${APP_HOME}/providers
+COPY    providers/*         ${APP_HOME}/providers/
 
 COPY    config/*            ${APP_HOME}/config/
 COPY    entrypoint.sh       /
