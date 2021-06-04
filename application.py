@@ -7,6 +7,7 @@ import subprocess
 from providers.apkmirror import Apkmirror
 from providers.aptoide import Aptoide
 from providers.providerInterface import ProviderInterface
+from adb_shell.adb_device import AdbDeviceTcp, AdbDeviceUsb
 
 
 class application:
@@ -47,10 +48,11 @@ class application:
 
 
     def current_version(self, device):
-        adb = subprocess.run(["adb/linux/adb", "shell", "dumpsys", "package", self.package_name], stdout=subprocess.PIPE, text=True)
-        pos = adb.stdout.find('versionName')
+        output = device.device_connection.shell('dumpsys package ' + self.package_name, transport_timeout_s=10.0, read_timeout_s=10.0, timeout_s=30.0, decode=True)
+        pos = output.find('versionName')
+
         if pos != -1:
-            str = adb.stdout[pos:]
+            str = output[pos:]
             posStart = str.find('=') + 1
             str = str[posStart:].partition('\n')[0].strip()
             return str
@@ -60,11 +62,11 @@ class application:
     def download_apk(self, arch='arm64-v8a', dpi='nodpi', api_level=0):
         return self.provider.download_apk(self.package_name, self.latest_version, arch, dpi, api_level)
 
-    def install_apk(self):
+    def install_apk(self, device):
         apk_name = self.package_name +'_' + self.latest_version + '.apk'
-        adb = subprocess.run(["adb/linux/adb", "install", "-r", "cache/" + apk_name], stdout=subprocess.PIPE, text=True)
-        print(adb.stdout)
-        if adb.stdout.find('Success') != -1:
+        output = device.device_connection.shell('install -r cache/' + apk_name, transport_timeout_s=10.0, read_timeout_s=10.0, timeout_s=30.0, decode=True)
+        print(output)
+        if output.find('Success') != -1:
             return 1
         else:
             return 0

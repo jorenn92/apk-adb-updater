@@ -1,3 +1,6 @@
+from typing import final
+
+from pyasn1.type.univ import Null
 from application import application
 import yaml
 import subprocess
@@ -5,6 +8,7 @@ import time
 import os
 from adb_shell.adb_device import AdbDeviceTcp, AdbDeviceUsb
 from adb_shell.auth.sign_pythonrsa import PythonRSASigner
+from adb_shell.auth.keygen import keygen
 
 class device:
     name = ''
@@ -16,6 +20,7 @@ class device:
     arch = 'arm64-v8a'
     dpi = 'nodpi'
     api_level = 0
+    device_connection = Null
 
     def __init__(self, vars):
         self.name = vars['name']
@@ -53,32 +58,18 @@ class device:
         return all_devices
     
     def connect_adb(self):
-        adb = subprocess.run(["adb/linux/adb", "devices"], stdout=subprocess.PIPE, text=True)
-        # Do first pair if not found
-        if adb.stdout.find(self.ip) == -1:
-            print('device ' + self.ip + ' not found')
-            if os.getenv('APP_HOME', None) == None:
-                print('Starting first pair')
-                state = self.adb_pair();
-            else:
-                print('Docker mode detected. At the moment it\'s not possible to automatically pair without user input. You need to exec in the container and adb pair your device manually before the updater wil do anything. Please check the documentation')
-                print('Skipping the update for ' + self.name + '. Please pair manually')
-                state = 0
-        else:
-            state = 1
+        i = 0
+        while i < 3: 
+            if i > 0:
+                time.sleep(5)
+                print('Retrying connection')
 
-        if state == 1:
-            # Connect to device
-            print('Connecting to ' + self.ip)
-            adb = subprocess.run(["adb/linux/adb", "connect", str(self.ip) + ':' + str(self.port)], stdout=subprocess.PIPE)
-            if (str(adb.stdout).find('connected to') != -1):
-                print('Successfully connected')
-                return 1
+            out = self.connect_adb_now()
+            if out == 1:
+                return out
             else:
-                print('Connection failed')
-                return 0
-        else:
-            return 0
+                i = i + 1
+        print('Can\'t establish connection.. Giving up')
 
         
     def adb_pair(self):
@@ -101,17 +92,36 @@ class device:
             print('For android versions < 11 a manual first pair is required.')
             return 0
     
-    def connect_adb_new(self):
+    def connect_adb_now(self):
         # Load the public and private keys
-        adbkey = 'config/keys/adbkey'
-        with open(adbkey) as f:
-            priv = f.read()
-        with open(adbkey + '.pub') as f:
-            pub = f.read()
-        signer = PythonRSASigner(pub, priv)
+        adbkey = 'config/keys/' + self.name + '/adb_key'
+
+        try:
+            with open(adbkey) as f:
+                priv = f.read()
+            with open(adbkey + '.pub') as f:
+                pub = f.read()
+            signer = PythonRSASigner(pub, priv)
+        except FileNotFoundError:
+            print('Keypair not found, generating new keys..')
+            dirname = adbkey[::-1].split('/', 1)[1][::-1]
+            os.makedirs(dirname)
+            keygen(adbkey)
+            print('Keys generated')
+            return 0
 
         # Connect
-        device = AdbDeviceTcp(self.ip, self.port, default_transport_timeout_s=9.)
-        device.connect(rsa_keys=[signer], auth_timeout_s=0.1)
-        return device
+        print('Connecting to ' + self.name)
+        try:
+            device = AdbDeviceTcp(self.ip, self.port, default_transport_timeout_s=9.0)
+            device.connect(rsa_keys=[signer], auth_timeout_s=0.1)
+            print('Succesfully connected')
+            self.device_connection = device
+            return 1
+        except Exception:
+            print('Can\'t connect to the device right now')
+            return 0
+
+            
+       
 

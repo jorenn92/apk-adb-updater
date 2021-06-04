@@ -3,8 +3,9 @@ import glob
 import sys
 from time import sleep
 from device import device
-import yaml
 import time
+import subprocess
+
 
 class updater:
     def perform_update(devices):
@@ -32,7 +33,7 @@ class updater:
                                 print('Installing version ' + latest_version + '...')
                                 state = application.download_apk(device.arch, device.dpi, device.api_level)
                                 if state != 0:
-                                    state = application.install_apk()
+                                    state = application.install_apk(device)
                                 if state != 0:
                                     print('succesfully installed ' + application.package_name + ' version ' + latest_version)
                                 else :
@@ -43,7 +44,7 @@ class updater:
                     print('Device not available. Skipping ' + device.name)
             else:
                 print(device.name + ' isn\'t enabled. Skipping..')
-
+  
 
 def main(args=None):
     # set working dir
