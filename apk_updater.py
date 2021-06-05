@@ -73,12 +73,10 @@ def main(args=None):
         time.sleep(3600)
 
 def clear_cache():
-    files = glob.glob('cache/*')
-    for f in files:
-        try:
-            os.remove(f)
-        except OSError as e:
-            print("Error: %s : %s" % (f, e.strerror))
+    try:
+        subprocess.call("rm -rf cache/*", shell=True)
+    except Exception as e:
+        print("Error: %s : %s" % (e.strerror))
     print('Cache cleared')
 
 def platform_tools():
@@ -92,9 +90,6 @@ def platform_tools():
     except Exception: 
         print('Platform Tools update failed')
         return 0
-    
-    # remove previous install
-    subprocess.call("rm -rf adb/linux/*", shell=True)
 
     # install new
     try:
@@ -102,8 +97,10 @@ def platform_tools():
         with zipfile.ZipFile('cache/platform_tools.zip', 'r') as zip_ref:
             zip_ref.extractall('cache/platform_tools')
 
+            # remove previous install
+        subprocess.call("rm -rf adb/linux/*", shell=True)
         subprocess.call("mv cache/platform_tools/platform-tools/* adb/linux/", shell=True)
-        subprocess.call("chmod +x adb/linux/adb", shell=True)
+        subprocess.call("chmod -R 755 adb/linux/*", shell=True)
 
         print('Platform Tools update complete')
         return 1

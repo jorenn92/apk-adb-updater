@@ -58,12 +58,15 @@ class application:
         return self.provider.download_apk(self.package_name, self.latest_version, arch, dpi, api_level)
 
     def install_apk(self, device):
-        apk_name = self.package_name +'_' + self.latest_version + '.apk'
-        adb = subprocess.run(["adb/linux/adb", "-s", device.ip + ':' + device.port, "install", "-r", "cache/" + apk_name], stdout=subprocess.PIPE, text=True)
-        if adb.stdout.find('Success') != -1:
-            return 1
-        else:
-            return 0
+        try:
+            apk_name = self.package_name +'_' + self.latest_version + '.apk'
+            adb = subprocess.run(["adb/linux/adb", "-s", device.ip + ':' + device.port, "install", "-r", "cache/" + apk_name], stdout=subprocess.PIPE, text=True)
+            if adb.stdout.find('Success') != -1:
+                return 1
+            else:
+                return 0
+        except Exception:
+            print('Installation failed. Please note that it\'s currently not possible to install app bundles. Only apk\'s are supported')
 
 
 
