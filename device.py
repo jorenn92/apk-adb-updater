@@ -44,19 +44,23 @@ class device:
 
     def load_devices():
         # Get configs
-        with open('config/config.yml', 'r') as file:
-            config = yaml.safe_load(file) 
-        
-        # set from config
-        devices = config['devices']
+        try:
+            with open('config/config.yml', 'r') as file:
+                config = yaml.safe_load(file) 
+            
+            # set from config
+            devices = config['devices']
 
-        # get all devices
-        all_devices = [];
-        for dev in devices:
-            dev = device(dev)
-            dev.timeout = config['timeout']
-            all_devices.append(dev)
-        return all_devices
+            # get all devices
+            all_devices = [];
+            for dev in devices:
+                dev = device(dev)
+                dev.timeout = config['timeout']
+                all_devices.append(dev)
+            return all_devices
+        except Exception:
+            print('Failed loading devices or no device found. Please check your config.yml')
+            return 0
     
     def connect_adb(self):
         i=0

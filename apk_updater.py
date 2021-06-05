@@ -56,18 +56,21 @@ def main(args=None):
     # Go 
     platform_tools() # Update platform-tools
     devices = device.load_devices()
-    timeout = devices[0].timeout
-    first_run = True
-    while True :
-        if(first_run != True):
-            print('Done, updating again in ' + str(timeout) + ' seconds')
-            time.sleep(timeout)
-        else:
-            if not(os.path.exists('cache') and os.path.isdir('cache')):
-                os.mkdir('cache', 0o755)
-            first_run = False
-        updater.perform_update(devices)
-        clear_cache(), 
+    if devices != 0:
+        timeout = devices[0].timeout
+        first_run = True
+        while True :
+            if(first_run != True):
+                print('Done, updating again in ' + str(timeout) + ' seconds')
+                time.sleep(timeout)
+            else:
+                if not(os.path.exists('cache') and os.path.isdir('cache')):
+                    os.mkdir('cache', 0o755)
+                first_run = False
+            updater.perform_update(devices)
+            clear_cache(), 
+    else:
+        time.sleep(3600)
 
 def clear_cache():
     files = glob.glob('cache/*')
@@ -102,7 +105,7 @@ def platform_tools():
         subprocess.call("mv cache/platform_tools/platform-tools/* adb/linux/", shell=True)
         subprocess.call("chmod +x adb/linux/adb", shell=True)
 
-        print('Update complete')
+        print('Platform Tools update complete')
         return 1
     except Exception:
         print('Platform Tools update failed')
