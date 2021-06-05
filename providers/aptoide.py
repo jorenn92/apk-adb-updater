@@ -4,7 +4,7 @@ import shutil
 from providers.providerInterface import ProviderInterface
 
 class Aptoide(ProviderInterface):
-    api_url='http://ws75.aptoide.com/api/7/apps/'
+    api_url='https://ws75.aptoide.com/api/7/apps/'
 
     def request(self, package_name):
         url = self.api_url + 'search?query=' + package_name;
@@ -28,8 +28,12 @@ class Aptoide(ProviderInterface):
             return 0 
 
     def download_apk(self, package_name, version, arch='arm64-v8a', dpi='nodpi', api_level=0):
-        app = self.request(package_name)
-        # download the latest apk from aptoide
-        with urllib.request.urlopen(app['file']['path']) as response, open('cache/' + package_name +'_' + version  +'.apk', 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
-        return 1
+        try:
+            app = self.request(package_name)
+            # download the latest apk from aptoide
+            with urllib.request.urlopen(app['file']['path']) as response, open('cache/' + package_name +'_' + version  +'.apk', 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+            return 1
+        except Exception:
+            print('App not found or has a broken link on Aptoide. Please try another provider')
+            return 0
