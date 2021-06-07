@@ -53,12 +53,17 @@ class Apkmirror(ProviderInterface):
         else:
             return 0
 
-    def get_link(self, api_resp, arch='arm64-v8a', dpi='nodpi', api_level=0):
+    def get_link(self, api_resp, arch='arm64-v8a', dpi='nodpi', api_level=0, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36'}):
         for apk in api_resp['data'][0]['apks'] :
             if arch in apk['arches'] or len(apk['arches']) < 1 :
                 if 'minapi' in apk and (int(api_level) >= int(apk['minapi']) or int(api_level) == 0):
                     if dpi in apk['dpis'] or dpi == 'nodpi':
-                        return self.api_url + apk['link'] + 'download/'
-        print('no suitable apk found for given architecture, dpi & min version')
+                        link= self.api_url + apk['link']
+                        resp = get(link, allow_redirects=True, headers=headers)
+                        # Skip if it's an apk bundle
+                        if(resp.content.decode("utf-8").find('What\'s inside this APK bundle?') == -1):
+                            # Return the download ID
+                            return self.api_url + apk['link'] + 'download/'
+        print('no suitable .apk found for given architecture, dpi & min version. Note: we can\'t install split apk\'s')
         return 0
 
